@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "powered=false": { "model": "dynamicfog:block/fog_generator" },
+        "powered=true": { "model": "dynamicfog:block/fog_generator" }
+    }
+}

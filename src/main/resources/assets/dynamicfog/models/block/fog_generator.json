@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:block/cube_all",
+    "textures": {
+        "all": "dynamicfog:block/fog_generator_texture"
+    }
+}

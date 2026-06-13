@@ -1,0 +1,11 @@
+{
+  "itemGroup.dynamicfog": "Dynamic Fog",
+  "dynamicfog.configuration.title": "Dynamic Fog Configs",
+  "dynamicfog.configuration.section.dynamicfog.common.toml": "Dynamic Fog Configs",
+  "dynamicfog.configuration.section.dynamicfog.common.toml.title": "Dynamic Fog Configs",
+  "dynamicfog.configuration.items": "Item List",
+  "dynamicfog.configuration.logDirtBlock": "Log Dirt Block",
+  "dynamicfog.configuration.magicNumberIntroduction": "Magic Number Text",
+  "dynamicfog.configuration.magicNumber": "Magic Number",
+  "block.dynamicfog.fog_generator": "Fog Generator"
+}
