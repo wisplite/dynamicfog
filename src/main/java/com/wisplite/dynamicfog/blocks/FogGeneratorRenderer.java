@@ -27,6 +27,12 @@ public class FogGeneratorRenderer implements BlockEntityRenderer<FogGeneratorBlo
         return new AABB(offsetX - radiusX, offsetY - radiusY, offsetZ - radiusZ, offsetX + radiusX + 1, offsetY + radiusY + 1, offsetZ + radiusZ + 1);
     }
 
+
+    @Override
+    public boolean shouldRenderOffScreen(FogGeneratorBlockEntity entity) {
+        return entity.getRenderDebugBounds();
+    }
+
     @Override
     public void render(FogGeneratorBlockEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         // Only draw if the player enabled the checkbox in the GUI
