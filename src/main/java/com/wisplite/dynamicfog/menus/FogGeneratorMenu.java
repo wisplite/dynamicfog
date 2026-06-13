@@ -21,8 +21,9 @@ public class FogGeneratorMenu extends AbstractContainerMenu {
     private final int offsetZ;
     private final int fogDepth;
     private final int checksPerTick;
+    private final boolean renderDebugBounds;
 
-    public FogGeneratorMenu(int id, Inventory inventory, BlockPos blockPos, ContainerLevelAccess access, int radiusX, int radiusY, int radiusZ, int offsetX, int offsetY, int offsetZ, int fogDepth, int checksPerTick) {
+    public FogGeneratorMenu(int id, Inventory inventory, BlockPos blockPos, ContainerLevelAccess access, int radiusX, int radiusY, int radiusZ, int offsetX, int offsetY, int offsetZ, int fogDepth, int checksPerTick, boolean renderDebugBounds) {
         super(DynamicFog.FOG_GENERATOR_MENU.get(), id);
         this.blockPos = blockPos;
         this.access = access;
@@ -34,6 +35,7 @@ public class FogGeneratorMenu extends AbstractContainerMenu {
         this.offsetZ = offsetZ;
         this.fogDepth = fogDepth;
         this.checksPerTick = checksPerTick;
+        this.renderDebugBounds = renderDebugBounds;
     }
 
     public FogGeneratorMenu(int id, Inventory inventory, RegistryFriendlyByteBuf extraData) {
@@ -46,6 +48,7 @@ public class FogGeneratorMenu extends AbstractContainerMenu {
         this.offsetZ = extraData.readInt();
         this.fogDepth = extraData.readInt();
         this.checksPerTick = extraData.readInt();
+        this.renderDebugBounds = extraData.readBoolean();
         this.blockPos = extraData.readBlockPos();
         this.access = ContainerLevelAccess.NULL;
     }
@@ -84,6 +87,10 @@ public class FogGeneratorMenu extends AbstractContainerMenu {
 
     public int getChecksPerTick() {
         return this.checksPerTick;
+    }
+
+    public boolean getRenderDebugBounds() {
+        return this.renderDebugBounds;
     }
 
     @Override

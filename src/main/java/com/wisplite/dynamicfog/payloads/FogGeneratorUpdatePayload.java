@@ -17,7 +17,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record FogGeneratorUpdatePayload(BlockPos pos, IntTriple radii, IntTriple offsets, int fogDepth, int checksPerTick) implements CustomPacketPayload {
+public record FogGeneratorUpdatePayload(BlockPos pos, IntTriple radii, IntTriple offsets, int fogDepth, int checksPerTick, boolean renderDebugBounds) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<FogGeneratorUpdatePayload> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(DynamicFog.MODID, "update_fog_generator"));
 
     public static final StreamCodec<FriendlyByteBuf, FogGeneratorUpdatePayload> CODEC = StreamCodec.composite(
@@ -26,11 +26,12 @@ public record FogGeneratorUpdatePayload(BlockPos pos, IntTriple radii, IntTriple
         IntTriple.CODEC, FogGeneratorUpdatePayload::offsets,
         ByteBufCodecs.INT, FogGeneratorUpdatePayload::fogDepth,
         ByteBufCodecs.INT, FogGeneratorUpdatePayload::checksPerTick,
+        ByteBufCodecs.BOOL, FogGeneratorUpdatePayload::renderDebugBounds,
         FogGeneratorUpdatePayload::new
     );
 
-    public FogGeneratorUpdatePayload(BlockPos pos, int radiusX, int radiusY, int radiusZ, int offsetX, int offsetY, int offsetZ, int fogDepth, int checksPerTick) {
-        this(pos, new IntTriple(radiusX, radiusY, radiusZ), new IntTriple(offsetX, offsetY, offsetZ), fogDepth, checksPerTick);
+    public FogGeneratorUpdatePayload(BlockPos pos, int radiusX, int radiusY, int radiusZ, int offsetX, int offsetY, int offsetZ, int fogDepth, int checksPerTick, boolean renderDebugBounds) {
+        this(pos, new IntTriple(radiusX, radiusY, radiusZ), new IntTriple(offsetX, offsetY, offsetZ), fogDepth, checksPerTick, renderDebugBounds);
     }
 
     public int radiusX() {
@@ -71,6 +72,7 @@ public record FogGeneratorUpdatePayload(BlockPos pos, IntTriple radii, IntTriple
                 blockEntity.setOffsets(this.offsetX(), this.offsetY(), this.offsetZ());
                 blockEntity.setFogDepth(this.fogDepth());
                 blockEntity.setChecksPerTick(this.checksPerTick());
+                blockEntity.setRenderDebugBounds(this.renderDebugBounds());
                 blockEntity.setChanged();
                 level.sendBlockUpdated(this.pos, blockEntity.getBlockState(), blockEntity.getBlockState(), 3);
 

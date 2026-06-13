@@ -1,6 +1,7 @@
 package com.wisplite.dynamicfog.blocks;
 
 import com.mojang.serialization.MapCodec;
+import com.wisplite.dynamicfog.client.FogGeneratorClientTicker;
 
 import javax.annotation.Nullable;
 
@@ -78,7 +79,7 @@ public class FogGeneratorBlock extends BaseEntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         if (level.isClientSide && state.getValue(POWERED)) {
-            return createTickerHelper(type, FogGeneratorBlockEntity.FOG_GENERATOR_BE.get(), FogGeneratorBlockEntity::clientTick);
+            return createTickerHelper(type, FogGeneratorBlockEntity.FOG_GENERATOR_BE.get(), FogGeneratorClientTicker::clientTick);
         }
         return null;
     }

@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 
 public class FogGeneratorScreen extends AbstractContainerScreen<FogGeneratorMenu> {
@@ -27,6 +28,7 @@ public class FogGeneratorScreen extends AbstractContainerScreen<FogGeneratorMenu
     private EditBox offsetZ;
     private EditBox fogDepth;
     private EditBox checksPerTick;
+    private Checkbox renderDebugBounds;
     private int xCenter;
     private int yCenter;
     
@@ -34,7 +36,7 @@ public class FogGeneratorScreen extends AbstractContainerScreen<FogGeneratorMenu
         super(menu, inventory, title);
 
         this.imageWidth = 248;
-        this.imageHeight = 200;
+        this.imageHeight = 220;
     }
 
     @Override
@@ -79,6 +81,12 @@ public class FogGeneratorScreen extends AbstractContainerScreen<FogGeneratorMenu
         this.addRenderableWidget(this.fogDepth);
         this.addRenderableWidget(this.checksPerTick);
 
+        this.renderDebugBounds = Checkbox.builder(Component.literal("Show debug bounds"), this.font)
+            .pos(this.xCenter - 55, this.yCenter + 70 + shift)
+            .selected(this.getMenu().getRenderDebugBounds())
+            .build();
+        this.addRenderableWidget(this.renderDebugBounds);
+
         this.addRenderableWidget(Button.builder(Component.literal("Save"), button -> {
             try {
                 int radiusX = Integer.parseInt(this.radiusX.getValue());
@@ -92,7 +100,7 @@ public class FogGeneratorScreen extends AbstractContainerScreen<FogGeneratorMenu
 
                 net.minecraft.core.BlockPos pos = this.getMenu().getBlockPos();
                 net.neoforged.neoforge.network.PacketDistributor.sendToServer(
-                    new FogGeneratorUpdatePayload(pos, radiusX, radiusY, radiusZ, offsetX, offsetY, offsetZ, fogDepth, checksPerTick)
+                    new FogGeneratorUpdatePayload(pos, radiusX, radiusY, radiusZ, offsetX, offsetY, offsetZ, fogDepth, checksPerTick, this.renderDebugBounds.selected())
                 );
 
             } catch (NumberFormatException e) {
@@ -101,7 +109,7 @@ public class FogGeneratorScreen extends AbstractContainerScreen<FogGeneratorMenu
             }
 
             this.minecraft.player.closeContainer();
-        }).bounds(this.xCenter + 25, this.yCenter + 70 + shift, 30, 15).build());
+        }).bounds(this.xCenter + 25, this.yCenter + 90 + shift, 30, 15).build());
     }
     
     @Override

@@ -6,8 +6,6 @@ import com.mojang.logging.LogUtils;
 import com.wisplite.dynamicfog.blocks.FogGeneratorBlock;
 import com.wisplite.dynamicfog.blocks.FogGeneratorBlockEntity;
 
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -28,7 +26,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -40,8 +38,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 import com.wisplite.dynamicfog.menus.FogGeneratorMenu;
 import com.wisplite.dynamicfog.particles.DynamicFogParticleTypes;
-import com.wisplite.dynamicfog.particles.FogParticle;
 import com.wisplite.dynamicfog.payloads.FogGeneratorUpdatePayload;
+import com.wisplite.dynamicfog.blocks.FogGeneratorRenderer;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(DynamicFog.MODID)
@@ -54,10 +52,6 @@ public class DynamicFog {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     // Create a Deferred Register to hold Items which will all be registered under the "dynamicfog" namespace
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-
-    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(Registries.PARTICLE_TYPE, MODID);
-    
-    public static final Supplier<SimpleParticleType> FOG_PARTICLE = PARTICLES.register("fog", () -> new SimpleParticleType(true));
 
     // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "dynamicfog" namespace
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
@@ -96,14 +90,12 @@ public class DynamicFog {
         FogGeneratorBlockEntity.BLOCK_ENTITY_TYPES.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus);
-        //PARTICLES.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
         DynamicFogParticleTypes.PARTICLES.register(modEventBus);
         MENUS.register(modEventBus);
         modEventBus.addListener(DynamicFog::register);
-        //modEventBus.addListener(DynamicFog::registerParticles);
-
+        modEventBus.addListener(DynamicFog::registerRenderers);
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (DynamicFog) to respond directly to events.
         // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
@@ -139,7 +131,7 @@ public class DynamicFog {
         registrar.playToServer(FogGeneratorUpdatePayload.TYPE, FogGeneratorUpdatePayload.CODEC, (payload, context) -> payload.handle(context));
     }
 
-    public static void registerParticles(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(FOG_PARTICLE.get(), FogParticle.Provider::new);
+    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(FogGeneratorBlockEntity.FOG_GENERATOR_BE.get(), FogGeneratorRenderer::new);
     }
 }
