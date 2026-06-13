@@ -16,6 +16,18 @@ public class FogGeneratorRenderer implements BlockEntityRenderer<FogGeneratorBlo
     }
 
     @Override
+    public AABB getRenderBoundingBox(FogGeneratorBlockEntity entity) {
+        int offsetX = entity.getOffsetX();
+        int offsetY = entity.getOffsetY();
+        int offsetZ = entity.getOffsetZ();
+        int radiusX = entity.getRadiusX();
+        int radiusY = entity.getRadiusY();
+        int radiusZ = entity.getRadiusZ();
+
+        return new AABB(offsetX - radiusX, offsetY - radiusY, offsetZ - radiusZ, offsetX + radiusX + 1, offsetY + radiusY + 1, offsetZ + radiusZ + 1);
+    }
+
+    @Override
     public void render(FogGeneratorBlockEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         // Only draw if the player enabled the checkbox in the GUI
         if (!entity.getRenderDebugBounds()) return;
